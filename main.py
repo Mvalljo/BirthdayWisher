@@ -6,6 +6,10 @@ import pandas
 birthday_month = 0
 birthday_day = 0
 name = ""
+birthday_email = ""
+my_email = ""
+password = ""
+birthday_letter = ""
 
 # 1. Update the birthdays.csv
 
@@ -21,6 +25,7 @@ for birthdays in birthday_dict:
         birthday_month = birthdays["month"]
         birthday_day = birthdays["day"]
         name = birthdays["name"]
+        birthday_email = birthdays["email"]
         print("Its someones birthday.")
 
 # 3. If step 2 is true, pick a random letter from letter templates and replace the [NAME] with the person's actual name from birthdays.csv
@@ -29,9 +34,16 @@ with open(f"{letter_template}.txt", "r") as file:
     letter = file.readlines()
     replace_name = letter[0].replace("[NAME]", name)
     letter[0] = replace_name
+    birthday_letter = "".join(letter)
 
 # 4. Send the letter generated in step 3 to that person's email address.
-
+    with smtplib.SMTP("smtp.gmail.com") as connection:
+        connection.starttls()
+        connection.login(user=my_email, password=password)
+        connection.sendmail(
+            from_addr=my_email,
+            to_addrs=birthday_email,
+            msg=f"Subject:Happy Birthday!\n\n{birthday_letter}")
 
 
 
